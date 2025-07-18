@@ -10,7 +10,10 @@ sudo systemctl start nginx
 systemctl status nginx
 
 
-
+sudo apt install software-properties-common dirmngr -y
+sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
+sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mirror.23media.com/mariadb/repo/11.8.2/ubuntu noble main'
+sudo apt update
 sudo apt install mariadb-server -y
 sudo systemctl enable mariadb
 sudo systemctl start mariadb
