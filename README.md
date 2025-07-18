@@ -40,6 +40,61 @@ wget https://wordpress.org/latest.tar.gz
 tar -xvzf latest.tar.gz
 sudo mv wordpress /var/www/
 sudo chown -R www-data:www-data /var/www/wordpress
+
+
+
+
+```sudo nano /etc/nginx/sites-available/yourdomain.com```
+
+
+server {
+    listen 80;
+    server_name yourdomain.com www.yourdomain.com;
+
+    root /var/www/html;
+    index index.php index.html index.htm;
+
+    access_log /var/log/nginx/yourdomain_access.log;
+    error_log /var/log/nginx/yourdomain_error.log;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+        expires max;
+        log_not_found off;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+
+yourdomain.com with your actual domain
+/var/www/html with the correct path to your WordPress files
+php7.4-fpm.sock with the correct PHP version (check with php -v)
+
+
+
+
+
+sudo ln -s /etc/nginx/sites-available/yourdomain.com /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+sudo apt install php-fpm
+sudo systemctl restart php
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx
+
 sudo chmod -R 755 /var/www/wordpress
 
 
