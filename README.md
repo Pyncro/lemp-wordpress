@@ -12,9 +12,18 @@ systemctl status nginx
 
 sudo apt install software-properties-common dirmngr -y
 sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
+
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/mariadb.gpg > /dev/null
+
 sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mirror.23media.com/mariadb/repo/11.8.2/ubuntu noble main'
+
+echo "deb [signed-by=/etc/apt/keyrings/mariadb.gpg arch=amd64] http://mirror.23media.com/mariadb/repo/11.8.2/ubuntu noble main" | sudo tee /etc/apt/sources.list.d/mariadb.list
+
+
 sudo apt update
 sudo apt install mariadb-server -y
+
 sudo systemctl enable mariadb
 sudo systemctl start mariadb
 
